@@ -104,7 +104,7 @@ const config = convict({
     host: {
       doc: 'Postgres host',
       format: String,
-      default: 'localhost',
+      default: 'postgres',
       env: 'POSTGRES_HOST'
     },
     port: {
@@ -122,7 +122,7 @@ const config = convict({
     user: {
       doc: 'Postgres user',
       format: String,
-      default: null,
+      default: 'postgres',
       env: 'POSTGRES_USER'
     },
     getTokenFromRDS: {
@@ -134,7 +134,7 @@ const config = convict({
     passwordForLocalDev: {
       doc: 'Postgres password for local development',
       format: String,
-      default: 'password',
+      default: 'postgres',
       env: 'POSTGRES_PASSWORD'
     },
     region: {
