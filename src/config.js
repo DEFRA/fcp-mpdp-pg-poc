@@ -99,6 +99,44 @@ const config = convict({
       default: 'x-cdp-request-id',
       env: 'TRACING_HEADER'
     }
+  },
+  postgres: {
+    host: {
+      doc: 'Postgres host',
+      format: String,
+      default: 'localhost',
+      env: 'POSTGRES_HOST'
+    },
+    port: {
+      doc: 'Postgres port',
+      format: 'port',
+      default: 5432,
+      env: 'POSTGRES_PORT'
+    },
+    database: {
+      doc: 'Postgres database name',
+      format: String,
+      default: 'fcp-mpdp-pg-poc',
+      env: 'POSTGRES_DB'
+    },
+    user: {
+      doc: 'Postgres user',
+      format: String,
+      default: null,
+      env: 'POSTGRES_USER'
+    },
+    getTokenFromRDS: {
+      doc: 'Get token from RDS',
+      format: Boolean,
+      default: false,
+      env: 'POSTGRES_GET_TOKEN_FROM_RDS'
+    },
+    passwordForLocalDev: {
+      doc: 'Postgres password for local development',
+      format: String,
+      default: 'password',
+      env: 'POSTGRES_PASSWORD'
+    }
   }
 })
 

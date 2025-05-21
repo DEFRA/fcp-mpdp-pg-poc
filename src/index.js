@@ -2,8 +2,10 @@ import process from 'node:process'
 
 import { createLogger } from './common/helpers/logging/logger.js'
 import { startServer } from './common/helpers/start-server.js'
+import { connectToPostgres } from './data/index.js'
 
-await startServer()
+const server = await startServer()
+await connectToPostgres(server)
 
 process.on('unhandledRejection', (error) => {
   const logger = createLogger()
