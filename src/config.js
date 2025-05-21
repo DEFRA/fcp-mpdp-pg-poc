@@ -128,7 +128,7 @@ const config = convict({
     getTokenFromRDS: {
       doc: 'Get token from RDS',
       format: Boolean,
-      default: false,
+      default: true,
       env: 'POSTGRES_GET_TOKEN_FROM_RDS'
     },
     passwordForLocalDev: {
@@ -136,6 +136,12 @@ const config = convict({
       format: String,
       default: 'password',
       env: 'POSTGRES_PASSWORD'
+    },
+    region: {
+      doc: 'AWS region for RDS',
+      format: String,
+      default: 'eu-west-2',
+      env: 'POSTGRES_REGION'
     }
   }
 })

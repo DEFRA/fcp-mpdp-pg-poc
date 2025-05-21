@@ -95,6 +95,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: fcp-mpdp-pg-poc
+      POSTGRES_GET_TOKEN_FROM_RDS: false
     networks:
       - cdp-tenant
     volumes:
