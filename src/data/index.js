@@ -33,9 +33,9 @@ async function connectToPostgres(server) {
     port: options.port,
     database: options.database,
     ...(server.secureContext && {
-        ssl: {
-          secureContext: server.secureContext
-        }
+      ssl: {
+        secureContext: server.secureContext
+      }
     })
   })
   await db.connect()
