@@ -107,6 +107,12 @@ const config = convict({
       default: 'postgres',
       env: 'POSTGRES_HOST'
     },
+    hostReadOnly: {
+      doc: 'Postgres read-only host',
+      format: String,
+      default: 'postgres',
+      env: 'POSTGRES_HOST_READ'
+    },
     port: {
       doc: 'Postgres port',
       format: 'port',

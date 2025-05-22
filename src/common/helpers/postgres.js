@@ -23,16 +23,35 @@ export const postgres = {
         })
       })
 
+      const dbReadOnly = new Client({
+        user: options.user,
+        password: await getToken(options),
+        host: options.hostReadOnly,
+        port: options.port,
+        database: options.database,
+        ...(server.secureContext && {
+          ssl: {
+            secureContext: server.secureContext
+          }
+        })
+      })
+
       const databaseName = options.database
 
       await db.connect()
       server.logger.info(`Postgres connected to ${databaseName}`)
 
+      await dbReadOnly.connect()
+      server.logger.info(`Postgres read-only connected to ${databaseName}`)
+
       server.decorate('server', 'db', db)
+      server.decorate('server', 'dbReadOnly', dbReadOnly)
 
       server.events.on('stop', async () => {
         server.logger.info('Closing Postgres connection')
-        await db.d
+        await db.end()
+        await dbReadOnly.end()
+        server.logger.info('Postgres connections closed')
       })
     }
   },
