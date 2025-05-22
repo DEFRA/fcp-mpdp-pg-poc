@@ -116,13 +116,13 @@ const config = convict({
     database: {
       doc: 'Postgres database name',
       format: String,
-      default: 'fcp-mpdp-pg-poc',
+      default: 'fcp_mpdp_pg_poc',
       env: 'POSTGRES_DB'
     },
     user: {
       doc: 'Postgres user',
       format: String,
-      default: 'postgres',
+      default: 'fcp_mpdp_pg_poc',
       env: 'POSTGRES_USER'
     },
     getTokenFromRDS: {
