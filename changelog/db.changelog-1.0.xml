@@ -3,10 +3,10 @@
   <changeSet author="Defra" id="1">
     <tagDatabase tag="v0.0.0" />
   </changeSet>
-  <changeSet author="Defra" id="1">
+  <changeSet author="Defra" id="2">
     <tagDatabase tag="v1.0.0" />
   </changeSet>
-  <changeSet author="Defra" id="2">
+  <changeSet author="Defra" id="3">
     <createTable tableName="payment_activity_data">
       <column name="id" type="INTEGER" autoIncrement="true" >
         <constraints nullable="false" primaryKey="true" primaryKeyName="id_pkey" />
