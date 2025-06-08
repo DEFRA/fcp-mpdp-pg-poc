@@ -1,4 +1,5 @@
 import Hapi from '@hapi/hapi'
+import Joi from 'joi'
 
 import { config } from './config.js'
 import { router } from './plugins/router.js'
@@ -44,6 +45,9 @@ async function createServer() {
   // secureContext  - loads CA certificates from environment config
   // pulse          - provides shutdown handlers
   // router         - routes used in the app
+
+  server.validator(Joi)
+
   await server.register([
     requestLogger,
     requestTracing,

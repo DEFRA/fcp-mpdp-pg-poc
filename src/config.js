@@ -148,6 +148,11 @@ const config = convict({
       format: String,
       default: 'eu-west-2',
       env: 'POSTGRES_REGION'
+    },
+    dialect: {
+      doc: 'Sequelize dialect',
+      format: String,
+      default: 'postgres'
     }
   }
 })

@@ -47,30 +47,16 @@ services:
       start_period: 1s
       timeout: 10s
 
-  ################################################################################
-
-  # frontend:
-  #   image: defradigital/frontend:${FRONTEND_VERSION:-latest}
-  #   ports:
-  #     - '3000:3000'
-  #   links:
-  #     - 'localstack:localstack'
-  #     - 'redis:redis'
-  #   depends_on:
-  #     localstack:
-  #       condition: service_healthy
-  #     redis:
-  #       condition: service_started
-  #   env_file:
-  #     - 'compose/aws.env'
-  #   environment:
-  #     PORT: 3000
-  #     NODE_ENV: development
-  #     REDIS_HOST: redis
-  #     LOCALSTACK_ENDPOINT: http://localstack:4566
-  #     USE_SINGLE_INSTANCE_CACHE: true
-  #   networks:
-  #     - cdp-tenant
+  liquibase:
+    image: liquibase/liquibase
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./changelog:/liquibase/changelog
+    command: --url=jdbc:postgresql://postgres:5432/fcp_mpdp_pg_poc --username=postgres --password=postgres --changelog-file=changelog/db.changelog.xml update
+    networks:
+      - cdp-tenant
 
   fcp-mpdp-pg-poc:
     build:
@@ -81,9 +67,11 @@ services:
     links:
       - 'localstack:localstack'
     depends_on:
-      localstack:
-        condition: service_healthy
       postgres:
+        condition: service_healthy
+      liquibase:
+        condition: service_started
+      localstack:
         condition: service_healthy
     env_file:
       - 'compose/aws.env'
