@@ -1,49 +1,57 @@
-function applyFiltersAndGroupByPayee (
+function applyFiltersAndGroupByPayee(
   searchResults,
   { schemes = [], counties = [], amounts = [], years = [] }
 ) {
   const schemeFilteredResults = filterBySchemes(searchResults, schemes)
-  const countyFilteredResults = filterByCounties(schemeFilteredResults, counties)
+  const countyFilteredResults = filterByCounties(
+    schemeFilteredResults,
+    counties
+  )
   const yearFilteredResults = filterByYears(countyFilteredResults, years)
   const groupedResults = groupByPayee(yearFilteredResults)
   const amountFilteredResults = filterByAmounts(groupedResults, amounts)
-  return amountFilteredResults.map(result => removeKeys(result, ['scheme']))
+  return amountFilteredResults.map((result) => removeKeys(result, ['scheme']))
 }
 
-function filterBySchemes (searchResults, schemes) {
+function filterBySchemes(searchResults, schemes) {
   if (!schemes.length) {
     return searchResults
   }
-  return searchResults.filter(result =>
+  return searchResults.filter((result) =>
     schemes.includes(result.scheme.toLowerCase())
   )
 }
 
-function filterByCounties (searchResults, counties) {
+function filterByCounties(searchResults, counties) {
   if (!counties.length) {
     return searchResults
   }
-  return searchResults.filter(result =>
+  return searchResults.filter((result) =>
     counties.includes(result.county_council.toLowerCase())
   )
 }
 
-function filterByYears (results, years) {
+function filterByYears(results, years) {
   if (!years.length) {
     return results
   }
 
-  return results.filter(x => years.includes(x.financial_year))
+  return results.filter((x) => years.includes(x.financial_year))
 }
 
-function groupByPayee (searchResults) {
+function groupByPayee(searchResults) {
   const result = searchResults.reduce((acc, item) => {
-    const payee = acc.find(r => r.payee_name === item.payee_name && r.part_postcode === item.part_postcode)
+    const payee = acc.find(
+      (r) =>
+        r.payee_name === item.payee_name &&
+        r.part_postcode === item.part_postcode
+    )
 
     if (!payee) {
       acc.push({ ...item })
     } else {
-      payee.total_amount = parseFloat(payee.total_amount) + parseFloat(item.total_amount)
+      payee.total_amount =
+        parseFloat(payee.total_amount) + parseFloat(item.total_amount)
     }
 
     return acc
@@ -52,7 +60,7 @@ function groupByPayee (searchResults) {
   return result
 }
 
-function filterByAmounts (searchResults, amounts) {
+function filterByAmounts(searchResults, amounts) {
   if (!amounts.length) {
     return searchResults
   }
@@ -61,8 +69,8 @@ function filterByAmounts (searchResults, amounts) {
     return { from: parseFloat(from), to: parseFloat(to) }
   })
 
-  return searchResults.filter(result => {
-    return amountRanges.some(range => {
+  return searchResults.filter((result) => {
+    return amountRanges.some((range) => {
       const totalAmount = parseFloat(result.total_amount)
       return !range.to
         ? totalAmount >= range.from
@@ -71,7 +79,7 @@ function filterByAmounts (searchResults, amounts) {
   })
 }
 
-function getFilterOptions (searchResults) {
+function getFilterOptions(searchResults) {
   if (!searchResults.length) {
     return { schemes: [], amounts: [], counties: [], years: [] }
   }
@@ -84,11 +92,17 @@ function getFilterOptions (searchResults) {
   }
 }
 
-function getUniqueFields (searchResults, field) {
+function getUniqueFields(searchResults, field) {
   try {
     return searchResults.reduce((acc, result) => {
-      if (!acc.length || acc.findIndex((y) =>
-        y?.toString().toLowerCase() === result[field]?.toString().toLowerCase()) === -1) {
+      if (
+        !acc.length ||
+        acc.findIndex(
+          (y) =>
+            y?.toString().toLowerCase() ===
+            result[field]?.toString().toLowerCase()
+        ) === -1
+      ) {
         acc.push(result[field].toString())
       }
       return acc
@@ -99,7 +113,7 @@ function getUniqueFields (searchResults, field) {
   }
 }
 
-function removeKeys (obj, keys) {
+function removeKeys(obj, keys) {
   return Object.fromEntries(
     Object.entries(obj).filter(([key]) => !keys.includes(key))
   )

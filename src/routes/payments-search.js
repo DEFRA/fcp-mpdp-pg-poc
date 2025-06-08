@@ -9,7 +9,8 @@ const paymentsSearch = {
       query: {
         searchString: Joi.string().trim().min(1).required()
       },
-      failAction: async (_request, h, error) => h.response(error.toString()).code(400).takeover()
+      failAction: async (_request, h, error) =>
+        h.response(error.toString()).code(400).takeover()
     },
     handler: async (request, h) => {
       const suggestions = await getSearchSuggestions(request.query.searchString)

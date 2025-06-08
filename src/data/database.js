@@ -7,7 +7,7 @@ let SchemePaymentsModel
 let PaymentDataModel
 let PaymentDetailModel
 
-async function register (server, options) {
+async function register(server, options) {
   sequelize = new Sequelize({
     username: options.user,
     password: await getToken(options),
@@ -72,22 +72,18 @@ function defineModels() {
   })
 }
 
-async function healthCheck () {
+async function healthCheck() {
   await sequelize.authenticate()
 }
 
-async function getAnnualPayments () {
+async function getAnnualPayments() {
   return SchemePaymentsModel.findAll({
-    attributes: [
-      'scheme',
-      'financial_year',
-      'total_amount'
-    ],
+    attributes: ['scheme', 'financial_year', 'total_amount'],
     raw: true
   })
 }
 
-async function getPayeePayments (payeeName, partPostcode) {
+async function getPayeePayments(payeeName, partPostcode) {
   return PaymentDetailModel.findAll({
     group: [
       'financial_year',
@@ -117,11 +113,23 @@ async function getPayeePayments (payeeName, partPostcode) {
   })
 }
 
-async function getAllPayments () {
+async function getAllPayments() {
   const payments = await PaymentDataModel.findAll({
-    group: ['payee_name', 'part_postcode', 'town', 'county_council', 'scheme', 'financial_year'],
+    group: [
+      'payee_name',
+      'part_postcode',
+      'town',
+      'county_council',
+      'scheme',
+      'financial_year'
+    ],
     attributes: [
-      'payee_name', 'part_postcode', 'town', 'county_council', 'scheme', 'financial_year',
+      'payee_name',
+      'part_postcode',
+      'town',
+      'county_council',
+      'scheme',
+      'financial_year',
       [sequelize.fn('sum', sequelize.col('amount')), 'total_amount']
     ],
     raw: true
@@ -129,11 +137,25 @@ async function getAllPayments () {
   return payments
 }
 
-async function getAllPaymentsByPage (page = 1, pageSize = 250) {
+async function getAllPaymentsByPage(page = 1, pageSize = 250) {
   return PaymentDataModel.findAll({
-    group: ['payee_name', 'part_postcode', 'town', 'county_council', 'scheme', 'financial_year', 'scheme_detail'],
+    group: [
+      'payee_name',
+      'part_postcode',
+      'town',
+      'county_council',
+      'scheme',
+      'financial_year',
+      'scheme_detail'
+    ],
     attributes: [
-      'payee_name', 'part_postcode', 'town', 'county_council', 'scheme', 'financial_year', 'scheme_detail',
+      'payee_name',
+      'part_postcode',
+      'town',
+      'county_council',
+      'scheme',
+      'financial_year',
+      'scheme_detail',
       [sequelize.fn('sum', sequelize.col('amount')), 'total_amount']
     ],
     raw: true,
