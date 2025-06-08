@@ -21,13 +21,13 @@ jest.mock('./logging/logger.js', () => ({
     error: (...args) => mockLoggerError(...args)
   })
 }))
-jest.mock('pg', () => {
-  const mockClient = {
-    connect: jest.fn().mockResolvedValue(),
-    end: jest.fn().mockResolvedValue(),
-    query: jest.fn().mockResolvedValue({ rows: [] })
+jest.mock('../../data/database.js', () => {
+  const mockSequelize = {
+    authenticate: jest.fn().mockResolvedValue()
   }
-  return { Client: jest.fn(() => mockClient) }
+  return {
+    register: jest.fn(() => mockSequelize)
+  }
 })
 
 describe('#startServer', () => {
@@ -78,14 +78,10 @@ describe('#startServer', () => {
       )
       expect(mockHapiLoggerInfo).toHaveBeenNthCalledWith(
         4,
-        'Postgres read-only connected to fcp_mpdp_pg_poc'
-      )
-      expect(mockHapiLoggerInfo).toHaveBeenNthCalledWith(
-        5,
         'Server started successfully'
       )
       expect(mockHapiLoggerInfo).toHaveBeenNthCalledWith(
-        6,
+        5,
         'Access your backend on http://localhost:3098'
       )
     })
