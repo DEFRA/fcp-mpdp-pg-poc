@@ -15,11 +15,13 @@ async function register(server, options) {
     port: options.port,
     dialect: options.dialect,
     database: options.database,
-    ...(server.secureContext && {
-      ssl: {
-        secureContext: server.secureContext
-      }
-    })
+    dialectOptions: {
+      ...(server.secureContext && {
+        ssl: {
+          secureContext: server.secureContext
+        }
+      })
+    }
   })
 
   defineModels()
