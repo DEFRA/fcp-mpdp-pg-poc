@@ -17,7 +17,8 @@ async function register(server, options) {
     database: options.database,
     dialectOptions: {
       ssl: server.secureContext || false
-    }
+    },
+    logging: (msg) => server.logger.info(msg)
   })
 
   defineModels()
