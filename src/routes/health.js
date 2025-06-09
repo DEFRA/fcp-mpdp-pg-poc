@@ -2,8 +2,13 @@ const health = {
   method: 'GET',
   path: '/health',
   handler: async function (request, h) {
-    await request.server.db.authenticate()
-    return h.response({ message: 'success' })
+    try {
+      await request.server.db.authenticate()
+      return h.response({ message: 'success' })
+    } catch (error) {
+      request.server.logger.error(error)
+      return h.response({ message: 'failure' }).code(500)
+    }
   }
 }
 

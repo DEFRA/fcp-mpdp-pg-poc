@@ -8,9 +8,17 @@ let PaymentDataModel
 let PaymentDetailModel
 
 async function register(server, options) {
+  if (options.getTokenFromRDS) {
+    options.hooks = {
+      beforeConnect: async (config) => {
+        config.password = await getToken(options)
+      }
+    }
+  }
+
   sequelize = new Sequelize({
     username: options.user,
-    password: await getToken(options),
+    password: options.passwordForLocalDev,
     host: options.host,
     port: options.port,
     dialect: options.dialect,
@@ -18,7 +26,16 @@ async function register(server, options) {
     dialectOptions: {
       ssl: server.secureContext || false
     },
-    logging: (msg) => server.logger.info(msg)
+    logging: (msg) => server.logger.info(msg),
+    hooks: options.hooks || {},
+    retry: {
+      backOffBase: 1000,
+      backOffExponent: 1.1,
+      match: [/SequelizeConnectionError/],
+      max: 10,
+      name: 'connection',
+      timeout: 60 * 1000
+    }
   })
 
   defineModels()
@@ -27,18 +44,14 @@ async function register(server, options) {
 }
 
 async function getToken(options) {
-  if (options.getTokenFromRDS) {
-    const signer = new Signer({
-      hostname: options.host,
-      port: options.port,
-      username: options.user,
-      credentials: fromNodeProviderChain(),
-      region: options.region
-    })
-    return await signer.getAuthToken()
-  } else {
-    return options.passwordForLocalDev
-  }
+  const signer = new Signer({
+    hostname: options.host,
+    port: options.port,
+    username: options.user,
+    credentials: fromNodeProviderChain(),
+    region: options.region
+  })
+  return await signer.getAuthToken()
 }
 
 function defineModels() {
