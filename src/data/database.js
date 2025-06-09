@@ -16,11 +16,7 @@ async function register(server, options) {
     dialect: options.dialect,
     database: options.database,
     dialectOptions: {
-      ...(server.secureContext && {
-        ssl: {
-          secureContext: server.secureContext
-        }
-      })
+      ssl: server.secureContext || false
     }
   })
 
